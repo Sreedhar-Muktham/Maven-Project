@@ -1,28 +1,18 @@
 pipeline {
-    agent { label 'master' }
-    tools {
-        maven 'M2_HOME'
-    }
+    agent none
     stages {
-        stage ('Checkout') {
-          steps {
-            git 'https://github.com/Sreedhar-Muktham/Maven-Project.git'
-          }
-        }
-        stage('Build') {
+        stage('Example Build') {
+            agent { docker 'maven:3.5-alpine' }
             steps {
-                sh 'mvn clean compile'
+                echo 'Hello, Maven'
+                sh 'mvn --version'
             }
         }
-        stage('Test'){
+        stage('Example Test') {
+            agent { docker 'openjdk:8-jre' }
             steps {
-                sh 'mvn test'
-                junit '**/target/surefire-reports/TEST-*.xml'
-            }
-        }
-        stage('Package') {
-            steps {
-                sh 'mvn package'
+                echo 'Hello, JDK'
+                sh 'java -version'
             }
         }
     }
